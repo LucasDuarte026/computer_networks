@@ -1,0 +1,101 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "lucas debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/main",
+            "args": [
+
+                "<",
+                "casos_teste/lucas.in" 
+
+            ],
+
+
+
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            // "preLaunchTask": "build", 
+            "miDebuggerPath": "/usr/bin/gdb"
+
+        },
+        {
+            "name": "lucas 1_projeto debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/main",
+            "args": [
+
+
+                // insira aqui os parametros de entrada
+
+                "<",
+                "casosTeste/lucas.in" 
+
+            ],
+
+
+
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/1_projeto",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            // "preLaunchTask": "build", 
+            "miDebuggerPath": "/usr/bin/gdb"
+
+        },
+        {
+            "name": "lucas 2_projeto debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/2_projeto/main",
+            "args": [
+
+
+                // insira aqui os parametros de entrada
+
+                "<",
+                "casosTeste/lucas.in" 
+
+            ],
+
+
+
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/2_projeto",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            // "preLaunchTask": "build", 
+            "miDebuggerPath": "/usr/bin/gdb"
+
+        }
+    ]
+}
