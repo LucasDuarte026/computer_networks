@@ -27,7 +27,7 @@ int main() {
     pthread_join(odd_thread, NULL);
     pthread_join(even_thread, NULL);
 
-    std::cout << "ok, finished" << std::endl;
+    std::cout << "\n\nok, finished" << std::endl;
 
     return 0;
 }
@@ -37,7 +37,7 @@ void *handle_odd(void *arg) {
     int connfd;
     char buffer[MAXLINE];
 
-    std::cout << "Waiting for odd number connection..." << std::endl;
+    std::cout << "Conecte o socket de números ímpares" << std::endl;
     connfd = accept(sockfd, (struct sockaddr *)NULL, NULL);
     if (connfd < 0) {
         std::cerr << "Accept failed" << std::endl;
@@ -55,7 +55,7 @@ void *handle_odd(void *arg) {
 
         memset(buffer, 0, MAXLINE);
         read(connfd, buffer, MAXLINE);
-        std::cout << "Received ODD: " << buffer << std::endl;
+        std::cout << " -> ímpar recebido: " << buffer << std::endl;
     }
 
     close(connfd);
@@ -68,7 +68,7 @@ void *handle_even(void *arg) {
     int connfd;
     char buffer[MAXLINE];
 
-    std::cout << "Waiting for even number connection..." << std::endl;
+    std::cout << "Conecte o socket de números pares: " << std::endl;
     connfd = accept(sockfd, (struct sockaddr *)NULL, NULL);
     if (connfd < 0) {
         std::cerr << "Accept failed" << std::endl;
@@ -86,7 +86,7 @@ void *handle_even(void *arg) {
 
         memset(buffer, 0, MAXLINE);
         read(connfd, buffer, MAXLINE);
-        std::cout << "Received EVEN: " << buffer << std::endl;
+        std::cout << " -> Par recebido: " << buffer << std::endl;
     }
 
     close(connfd);
@@ -94,12 +94,12 @@ void *handle_even(void *arg) {
     return NULL;
 }
 
-int create_server_socket(int port) {
+int create_server_socket(int port) { // Cria um socket para ouvir na porta x
     int listenfd;
     struct sockaddr_in server_addr;
 
     if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        std::cerr << "Socket creation failed" << std::endl;
+        std::cerr << "Falha em criar o socket" << std::endl;
         exit(EXIT_FAILURE);
     }
 
