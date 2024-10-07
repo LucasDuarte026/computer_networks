@@ -2,19 +2,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "lucas debug",
+            "name": "client debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/main",
+            "program": "${workspaceFolder}/client",
             "args": [
-
-                "<",
-                "casos_teste/lucas.in" 
-
+                // "<",
+                // "casos_teste/lucas.in" 
             ],
-
-
-
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
@@ -29,27 +24,18 @@
             ],
             // "preLaunchTask": "build", 
             "miDebuggerPath": "/usr/bin/gdb"
-
         },
         {
-            "name": "lucas 1_projeto debug",
+            "name": "server debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/main",
+            "program": "${workspaceFolder}/server",
             "args": [
-
-
-                // insira aqui os parametros de entrada
-
-                "<",
-                "casosTeste/lucas.in" 
-
+                // "<",
+                // "casos_teste/lucas.in" 
             ],
-
-
-
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/1_projeto",
+            "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -62,40 +48,6 @@
             ],
             // "preLaunchTask": "build", 
             "miDebuggerPath": "/usr/bin/gdb"
-
-        },
-        {
-            "name": "lucas 2_projeto debug",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/2_projeto/main",
-            "args": [
-
-
-                // insira aqui os parametros de entrada
-
-                "<",
-                "casosTeste/lucas.in" 
-
-            ],
-
-
-
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/2_projeto",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
-            // "preLaunchTask": "build", 
-            "miDebuggerPath": "/usr/bin/gdb"
-
         }
     ]
 }

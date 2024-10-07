@@ -7,93 +7,113 @@
 #include <string.h>
 #include <chrono>
 #include <thread>
+#include <mutex>
 
-#define ODD_PORT 18001
-#define EVEN_PORT 18002
-#define SERVER_IP "127.0.0.1"
+#define TEMP_PORT 18001
+#define HUMID_PORT 18002
+#define PRESS_PORT 18003
+#define ALT_PORT 18004
+// #define SERVER_IP "192.168.15.60" // ip do raspberrypi na rede atuals
+#define SERVER_IP "127.0.0.0" // para testes locais em localhost
 #define MAXLINE 1024
 
-void *send_odd_numbers(void *arg);
-void *send_even_numbers(void *arg);
+struct ThreadArgs // Usado para passar mais argumentos para dentro da thread
+{
+    int port;
+    const char *desc;
+};
 
+std::mutex print_mutex; // mutex usado para o print coordenado. uso atomico da saida
+
+void *receive_data(void *arg);
 int create_socket_and_connect(int port);
 
-int main() {
-    pthread_t odd_thread, even_thread;
+int main()
+{
+    pthread_t temp_thread, humid_thread, press_thread, alt_thread;
+
+    // Argumentos para as threads
+    ThreadArgs temp_args = {TEMP_PORT, "Temperature"};
+    ThreadArgs humid_args = {HUMID_PORT, "Humidity"};
+    ThreadArgs press_args = {PRESS_PORT, "Pression"};
+    ThreadArgs alt_args = {ALT_PORT, "Altitude"};
 
     // Criar e iniciar as threads
-    pthread_create(&odd_thread, NULL, send_odd_numbers, NULL);
-    pthread_create(&even_thread, NULL, send_even_numbers, NULL);
+    pthread_create(&temp_thread, NULL, receive_data, &temp_args);
+    pthread_create(&humid_thread, NULL, receive_data, &humid_args);
+    pthread_create(&press_thread, NULL, receive_data, &press_args);
+    pthread_create(&alt_thread, NULL, receive_data, &alt_args);
 
-    // Aguarda as threads (apesar do cliente ser infinito, por consistência)
-    pthread_join(odd_thread, NULL);
-    pthread_join(even_thread, NULL);
+    // Aguardar as threads (apesar do cliente ser infinito, por consistência)
+    pthread_join(temp_thread, NULL);
+    pthread_join(humid_thread, NULL);
+    pthread_join(press_thread, NULL);
+    pthread_join(alt_thread, NULL);
 
     return 0;
 }
 
-void *send_odd_numbers(void *arg) {
+void *receive_data(void *arg)
+{
+    ThreadArgs *args = (ThreadArgs *)arg;
     int sockfd;
+    {
+        std::lock_guard<std::mutex> lock(print_mutex);
 
-    // Tentativa contínua de conexão ao servidor na porta ODD
-    while (true) {
-        sockfd = create_socket_and_connect(ODD_PORT);
-        if (sockfd != -1) {
-            break;  // Se a conexão for bem-sucedida, saia do loop
+        std::cout << " - Socket connection oppened to |" << args->desc << "|\t" << " int port \t|" << args->port << "|"
+                  << std::endl;
+    }
+    while (true)
+    {
+        // Tentativa contínua de conexão ao servidor na porta especificada
+        sockfd = create_socket_and_connect(args->port);
+        if (sockfd != -1)
+        {
+            break; // Se a conexão for bem-sucedida, saia do loop
         }
-        std::cout << "waiting for the server to wake up (ODD)\n";
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));  // Aguardar 10 ms antes de tentar novamente
+
+        {
+            std::lock_guard<std::mutex> lock(print_mutex);
+
+            std::cout << "Aguardando o servidor na porta " << args->port << " para " << args->desc << "\n";
+        }
+        // std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Aguardar 10 ms antes de tentar novamente
     }
 
-    while (true) {
-        int random_number = rand() % 100;
-        if (random_number % 2 != 0) {
-            char message[MAXLINE];
-            snprintf(message, sizeof(message), "Odd number: %d", random_number);
-            send(sockfd, message, strlen(message), 0);
-            std::cout << "Sent to ODD server: " << message << std::endl;
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Aguardar 100 ms
+    char buffer[MAXLINE];
+    memset(buffer, 0, MAXLINE);
+    read(sockfd, buffer, MAXLINE);
+    std::cout << args->desc << " recept: " << buffer;
+   if (args->desc == "Temperature")
+    {
+        std::cout << "ºC" << std::endl;
     }
+    else if (args->desc == "Humidity")
+    {
+        std::cout << "%" << std::endl;
+    }
+    else if (args->desc == "Pression")
+    {
+        std::cout << " hPa" << std::endl;
+    }
+    else if (args->desc == "Altitude")
+    {
+        std::cout << "m" << std::endl;
+    }
+
 
     close(sockfd);
     return NULL;
 }
 
-void *send_even_numbers(void *arg) {
-    int sockfd;
-
-    // Tentativa contínua de conexão ao servidor na porta EVEN
-    while (true) {
-        sockfd = create_socket_and_connect(EVEN_PORT);
-        if (sockfd != -1) {
-            break;  // Se a conexão for bem-sucedida, saia do loop
-        }
-        std::cout << "waiting for the server to wake up (EVEN)\n";
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));  // Aguardar 10 ms antes de tentar novamente
-    }
-
-    while (true) {
-        int random_number = rand() % 100;
-        if (random_number % 2 == 0) {
-            char message[MAXLINE];
-            snprintf(message, sizeof(message), "Even number: %d", random_number);
-            send(sockfd, message, strlen(message), 0);
-            std::cout << "Sent to EVEN server: " << message << std::endl;
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Aguardar 100 ms
-    }
-
-    close(sockfd);
-    return NULL;
-}
-
-int create_socket_and_connect(int port) {
+int create_socket_and_connect(int port)
+{
     int sockfd;
     struct sockaddr_in server_addr;
 
-    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        std::cerr << "Socket creation error" << std::endl;
+    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    {
+        std::cerr << "Erro to create socket" << std::endl;
         return -1;
     }
 
@@ -101,17 +121,19 @@ int create_socket_and_connect(int port) {
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port);
 
-    if (inet_pton(AF_INET, SERVER_IP, &server_addr.sin_addr) <= 0) {
-        std::cerr << "Invalid address/ Address not supported" << std::endl;
+    if (inet_pton(AF_INET, SERVER_IP, &server_addr.sin_addr) <= 0)
+    {
+        std::cerr << "Endereço inválido/ não suportado" << std::endl;
         close(sockfd);
         return -1;
     }
 
-    if (connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
-        // Conexão falhou, fechar o socket
+    if (connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
+    {
+        std::cerr << "Falha na conexão" << std::endl;
         close(sockfd);
         return -1;
     }
 
-    return sockfd;  // Retorna o socket se a conexão for bem-sucedida
+    return sockfd; // Retorna o socket se a conexão for bem-sucedida
 }
