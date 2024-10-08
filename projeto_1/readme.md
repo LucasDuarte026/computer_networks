@@ -44,6 +44,8 @@ O projeto envolve a implementação de threads para lidar com diferentes grandez
 
 - **Lucas Sales Duarte** - 11734490
 - **Daniel Dias Silva Filho** - 13677114
+- **Daniel Umeda Kuhn** - 13676541  
+- **Manoel Thomaz Gama da Silva Neto** - 13676392
 
 Universidade de São Paulo (USP)
 
