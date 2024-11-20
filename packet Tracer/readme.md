@@ -1,5 +1,3 @@
-### Ilustração base da reed montada no packet tracer
+### Ilustração base da rede montada no packet tracer
 
-![Thumbnail](./packet.png)
-
----
+<img src="./packet.png" alt="Thumbnail" width="300"/>
