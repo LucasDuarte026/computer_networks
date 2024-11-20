@@ -2,7 +2,7 @@
 
 ## Vídeo Explicativo
 
-![Thumbnail do Vídeo](./thumbnail.jpg)  
+![Thumbnail do Vídeo](./thumbnail.png)  
 Assista ao vídeo explicativo clicando [aqui](https://link-para-o-video.com). Este vídeo discute os conceitos abordados no projeto, incluindo seus impactos sociais.
 
 ---
