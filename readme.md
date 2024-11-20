@@ -7,7 +7,7 @@ Para assistir ao vídeo explicativo sobre o projeto_1, clique [video_youtube](ht
 ---
 ## Projeto 2 
 ----
-![Thumbnail do Vídeo](./projeto_2_apresentação_do_vídeo/thumbnail.jpg)
+![Thumbnail do Vídeo](./projeto_2/thumbnail.png)
 Para assistir ao vídeo explicativo sobre o projeto_2, clique [video_youtube](https://youtu.be/VkDST4EMKO0).
 
 ---
